@@ -23,7 +23,7 @@ public class HereCodeAPIService {
 				+ "&searchtext=" + addy;
 //		String url = "https://geocoder.api.here.com/6.2/geocode.json?app_id=LUWetpk2tasboD76HVuG&app_code=rX04RFZsKvcq40wS_gkMXg&searchtext=1570%20woodward%20detroit";
 		HereCodeResponse response = restTemplate.getForObject(url, HereCodeResponse.class);
-		System.out.println(response.getResponse().getView().get(0).getResult().get(0).getLocation().getDisplayPosition().getLatitude());
+//		System.out.println(response.getResponse().getView().get(0).getResult().get(0).getLocation().getDisplayPosition().getLatitude());
 		Double[] latLong = {
 				Double.parseDouble(response.getResponse().getView().get(0).getResult().get(0).getLocation()
 						.getDisplayPosition().getLatitude()),

@@ -33,7 +33,7 @@
 ></script>
 <link
 	rel="stylesheet"
-	href="http://localhost:8080/style.css"
+	href="/style.css"
 >
 
 </head>

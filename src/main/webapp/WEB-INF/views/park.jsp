@@ -75,15 +75,27 @@
 			role="button"
 		>Start Over</a>
 	</div>
-	<div class="container">
-		<mainp>
-		<div class="card3">
-			<h2>The closest spot is at ${ClosePark.name }.</h2>
-			<h2>The least expensive spot is at ${CheapPark.name }.</h2>
-			<h1>The best value overall is at ${ValuePark.name }!</h1>
-		</div>
-		</mainp>
 
+	<div class="container">
+		<c:choose>
+			<c:when test="${ not empty park.address }">
+				<mainp>
+				<div class="card3">
+					<h2>The closest spot is at ${ClosePark.name }.</h2>
+					<h2>The least expensive spot is at ${CheapPark.name }.</h2>
+					<h1>The best value overall is at ${ValuePark.name }!</h1>
+				</div>
+				</mainp>
+			</c:when>
+			<c:otherwise>
+				<mainp>
+				<div class="card3">
+					<h1>Sorry, we can't find any spaces there! Maybe you can add
+						one!</h1>
+				</div>
+				</mainp>
+			</c:otherwise>
+		</c:choose>
 		<table
 			class="table"
 			id="table1"
@@ -102,7 +114,9 @@
 				<tr>
 					<td>${park.distanceDescription}</td>
 					<td>
-						<c:if test="${ CheapPark.address eq park.address }">
+						<c:if
+							test="${ (CheapPark.address eq park.address) and ( not empty park.address )}"
+						>
 							<a
 								href="#"
 								class="badge badge-warning"
