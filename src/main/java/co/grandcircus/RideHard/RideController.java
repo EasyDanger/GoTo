@@ -140,6 +140,7 @@ public class RideController {
 			none.setAddress("");
 			allParking.add(none);
 			mv.addObject("allParking", allParking);
+			mv.addObject("none", none);
 			return mv;
 			}
 		Park cheapestPark = allParking.get(0);

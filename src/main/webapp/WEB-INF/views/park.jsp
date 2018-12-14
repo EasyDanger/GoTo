@@ -78,7 +78,7 @@
 
 	<div class="container">
 		<c:choose>
-			<c:when test="${ not empty park.address }">
+			<c:when test="${ empty none.name }">
 				<mainp>
 				<div class="card3">
 					<h2>The closest spot is at ${ClosePark.name }.</h2>
