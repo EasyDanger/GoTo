@@ -1,29 +1,32 @@
-# Grand Circus Final Project
-This is a ReadMe. It can be used to explain what the project is and how it's evolved, in a general sense. Also communicating basic ideas about the application's function. 
+# GoTo
+GoTo is the final project started by myself, Twani Dhar, Marque Burgess, and Bryan Hallman of our Grand Circus Bootcamp. The application provides parking location information based off of the location of events chosen by the user, suggesting the best option based on the user's preferences. It consumes the TicketMaster, ParkWhiz, and Here Maps APIs. 
 
 ### Features
--What the app does can go here.
+- Provides parking data to users based off of events the user plans to attend. <br>
+- Allows user to add parking locations to database <br>
+- Provides price estimates for tickets, parking, & gas
 
 ### Planned Features
-This should be self-explanatory.
+- UI updates <br>
+- Breakdown price options by planned number of passengers <br>
+- Consume events from other services <br>
+- Consume parking data from other services to cover more locations
 
-##### [2.1.1] - 11/27/2018<br>
--The newest version number goes at the top. Like Twitter.
+##### [0.1.1] - 12/14/2018
+- Fixed redirect issue
+  - users can now add parkign locations if none are provided by API data
+  ##### Known Issues
+- No verification of user added parking locations <br>
+- some pages not responsive to screen size
 
-##### [2.1.0] - 11/27/2018<br>
--A big change that doesn't majorly change the core functionality of the app or the main visual style of the app would be a .1 release.<br>
+##### [0.1.0] - 12/14/2018
+- Fixed bug that broke site when list of parking locations was empty.
+##### Known Issues
+- Site redirects to index if list is empty
+  - Doesn't allow user to add parking locations
+- No verification of user added parking locations
 
-##### [2.0.1] - 11/26/2018<br>
--Bug fixes, copy editing, and very minor visual tweaks would constitute only a .0.1 release iteration.
-
-##### [2.0.0] - 11/25/2018<br>
--A new whole version number would constitute a change that majorly changes the function of the app or majorly changes the visual style of the app.
-
-##### [1.1.0] - 11/25/2018<br>
--The date helps keep track, and time would be even better. It's unlikely we'll be needing to update this frequently enough to include time, though.
-
-##### [1.0.0] - 11/24/2018<br>
--The first version number/commit should probably *not* start at 1.0.0. At the time of writing this, we're not even at 0.0.1, yet.
-
-<br>
-There should be some sort of credit somewhere in here.
+<div align="right">-Ed Carter</div> 
+<a href="https://twitter.com/EasyDanger"><div align="right">@EasyDanger</div></a>
+<a href="https://linkedin.com/in/CarterCommaEd"><div align="right">in/CarterCommaEd </div></a>
+<a href="https://github.com/EasyDanger"><div align="right">github.com/EasyDanger</div></a>
