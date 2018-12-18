@@ -14,7 +14,7 @@ GoTo is the final project started by myself, Twani Dhar, Marque Burgess, and Bry
 
 ##### [0.1.1] - 12/14/2018
 - Fixed redirect issue
-  - users can now add parkign locations if none are provided by API data
+  - users can now add parking locations if none are provided by API data
   ##### Known Issues
 - No verification of user added parking locations <br>
 - some pages not responsive to screen size
