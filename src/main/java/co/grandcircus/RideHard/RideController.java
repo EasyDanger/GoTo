@@ -131,9 +131,18 @@ public class RideController {
 
 		allParking.sort((h1, h2) -> h1.getPrice().compareTo(h2.getPrice()));
 		if (allParking.isEmpty()) {
-			return new ModelAndView("index", "EventMessage",
-					"We're sorry, there isn't any parking for that location. Maybe you'd consider adding one.");
-		}
+//			return new ModelAndView("index", "EventMessage",
+//					"We're sorry, there isn't any parking for that location. Maybe you'd consider adding one.");
+			Park none = new Park();
+			none.setName("No Spots!");
+			none.setPrice(0.00);
+			none.setDistanceInFeet(0.0);
+			none.setAddress("");
+			allParking.add(none);
+			mv.addObject("allParking", allParking);
+			mv.addObject("none", none);
+			return mv;
+			}
 		Park cheapestPark = allParking.get(0);
 
 		// Calls the method to order the list.
@@ -185,6 +194,7 @@ public class RideController {
 	// Controller to direct back to main results page at park.jsp.
 	@RequestMapping("/add/parkingspot")
 	public ModelAndView addPark(Park parkingSpot, HttpSession session, RedirectAttributes redir) {
+		//Ensures user-generated 
 		parkingSpot.setLatLong(geo.getLatLong(parkingSpot));
 		// Adds parking spot object to the database.
 		pd.create(parkingSpot);
