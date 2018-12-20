@@ -12,14 +12,24 @@ GoTo is the final project started by myself, Twani Dhar, Marque Burgess, and Bry
 - Consume events from other services <br>
 - Consume parking data from other services to cover more locations
 
-##### [0.1.1] - 12/14/2018
-- Fixed redirect issue
-  - users can now add parking locations if none are provided by API data
-  ##### Known Issues
+##### [1.1.2] - 12/20/2018
+- Added MeetUp search.<br>
+  - Added country menu to facilitate MeetUp search (requires city, country, and state if in the US)
+- Consolidated/revamped event item definitions
+##### Known Issues
 - No verification of user added parking locations <br>
-- some pages not responsive to screen size
+- Some pages not responsive to screen size <br>
+- MeetUp not yet supported by location search. <br>
+- Can only search MeetUps, functionality not yet implemented to search parking locations.
 
-##### [0.1.0] - 12/14/2018
+##### [1.1.1] - 12/14/2018
+- Fixed redirect issue
+  - Users can now add parking locations if none are provided by API data
+##### Known Issues
+- No verification of user added parking locations <br>
+- Some pages not responsive to screen size
+
+##### [1.1.0] - 12/14/2018
 - Fixed bug that broke site when list of parking locations was empty.
 ##### Known Issues
 - Site redirects to index if list is empty

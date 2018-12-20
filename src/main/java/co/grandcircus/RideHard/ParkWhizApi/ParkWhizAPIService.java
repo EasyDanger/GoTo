@@ -14,7 +14,7 @@ public class ParkWhizAPIService {
 
 	RestTemplate restTemplate = new RestTemplate();
 
-	public Park[] getPark(String latitude, String longitude, String date, String time, Double howFar) {
+	public Park[] getPark(Double latitude, Double longitude, String date, String time, Double howFar) {
 
 		// Map<String, String> request = new HashMap<>();
 		// request.put("q=",

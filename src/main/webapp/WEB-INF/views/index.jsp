@@ -76,9 +76,21 @@
 				style="text-align: center"
 				placeholder="(Optional)"
 			/>
+			
+			
+			<select name="Country">
+				<option value="all">Choose a Country</option>
+				<c:forEach
+					var="item"
+					items="${ CountryList }"
+				>
+					<option value="${ item.code }">${ item.name }</option>
+				</c:forEach>
+			</select>
 			<button class="btn btn-warning">Submit</button>
 		</p>
 	</form>
+
 	<c:choose>
 		<c:when test="${ not empty Events }">
 			<table class="table table-hover">
@@ -111,10 +123,10 @@
 					>
 						<tr bgcolor="#FFFAF8">
 							<td>${ item.name}</td>
-							<td>${ item._embedded.venues[0].name }</td>
-							<td>${ item._embedded.venues[0].city.name }</td>
-							<td>${ item.dates.start.localDate }</td>
-							<td>${ item.dates.start.localTime }</td>
+							<td>${ item.venue }</td>
+							<td>${ item.city }</td>
+							<td>${ item.date }</td>
+							<td>${ item.time }</td>
 							<td>
 								<a href="/howFar/${ item.id }">
 									<button class="btn btn-warning">Select Event</button>
@@ -139,7 +151,11 @@
 			</maini>
 		</c:otherwise>
 	</c:choose>
-	<br><br>
-	<p align="center" id="disclaim">*GoTo is presently US-only.</p>
+	<br>
+	<br>
+	<p
+		align="center"
+		id="disclaim"
+	>*GoTo is presently US-only.</p>
 </body>
 </html>

@@ -18,7 +18,8 @@ public class GeoCodeAPIService {
 		String addy = park.getAddress() + park.getCity();
 		String url = "https://api.geocod.io/v1.3/geocode?q=" + addy + "&api_key=" + apiKey;
 		GeoCodeResponse response = restTemplate.getForObject(url, GeoCodeResponse.class);
-		Double[] latLong = {Double.parseDouble(response.getResults().get(0).getLocation().getLatitude()), Double.parseDouble(response.getResults().get(0).getLocation().getLongitude())};
+		Double[] latLong = { response.getResults().get(0).getLocation().getLatitude(),
+				response.getResults().get(0).getLocation().getLongitude() };
 		return latLong;
 	}
 

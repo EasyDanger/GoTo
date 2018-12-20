@@ -9,14 +9,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ticketmaster.discovery.model.Event.PriceRange;
-
 import co.grandcircus.RideHard.HereCodeAPI.HereCodeAPIService;
 import co.grandcircus.RideHard.ParkDao.ParkDao;
 import co.grandcircus.RideHard.ParkWhizApi.Park;
 import co.grandcircus.RideHard.ParkWhizApi.ParkWhizAPIService;
 import co.grandcircus.RideHard.TicketMaster.Event;
 import co.grandcircus.RideHard.utils.ParkingByDistanceComparator;
+import co.grandcircus.RideHard.utils.UrEvent;
 
 //Class to contain the math and science portions of the data. These methods process the data, so the controller class can hold only controllers.
 @Component
@@ -33,16 +32,6 @@ public class ForMath {
 	@Autowired
 	private HereCodeAPIService geo;
 	
-	// Method to try to account for various prices without expensive prices pulling
-	// the average price out of whack.
-	Double reasonablePrice(PriceRange priceRange) {
-		Double average = priceRange.getMax() + priceRange.getMin();
-		if (average <= (priceRange.getMin() * 2)) {
-			return average;
-		}
-		return priceRange.getMin();
-	}
-
 	// Calculates the gas cost base on driving distance and IRS mileage factor for
 	// 2018.
 	Double gasCalc(Double drivingDistance) {
@@ -118,10 +107,10 @@ public class ForMath {
 
 	// Method to filter out events from search that have no times, as timeless
 	// events break the ParkWhiz API
-	public List<Event> filterTimeless(List<Event> events) {
-		List<Event> filteredEvents = new ArrayList<Event>();
-		for (Event event : events) {
-			if (event.getDates().getStart().getLocalTime() != null) {
+	public List<UrEvent> filterTimeless(List<UrEvent> events) {
+		List<UrEvent> filteredEvents = new ArrayList<UrEvent>();
+		for (UrEvent event : events) {
+			if (event.getTime() != null) {
 				filteredEvents.add(event);
 			}
 		}

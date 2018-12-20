@@ -15,11 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.grandcircus.RideHard.HereCodeAPI.HereCodeAPIService;
+import co.grandcircus.RideHard.MeetUp.MeetUpAPIService;
 import co.grandcircus.RideHard.ParkDao.ParkDao;
 import co.grandcircus.RideHard.ParkWhizApi.Park;
 import co.grandcircus.RideHard.TicketMaster.Event;
-import co.grandcircus.RideHard.TicketMaster.TicketMasterAPIResponse;
 import co.grandcircus.RideHard.TicketMaster.TicketMasterAPIService;
+import co.grandcircus.RideHard.utils.CountriesDao;
+import co.grandcircus.RideHard.utils.UrEvent;
 
 @Controller
 public class RideController {
@@ -32,53 +34,63 @@ public class RideController {
 	@Autowired
 	private TicketMasterAPIService tmAPI;
 	@Autowired
-	private ForMath math;	
+	private ForMath math;
 	@Autowired
 	private HereCodeAPIService geo;
-
+	@Autowired
+	private MeetUpAPIService meet;
+	@Autowired
+	private CountriesDao cd;
 
 	// Controller for index page. Accepts parameters from search fields, maintains
 	// the session.
 	@RequestMapping("/")
-	public ModelAndView tmAPI(@RequestParam(name = "Search", required = false) String searchTerm,
-			@RequestParam(name = "City", required = false) String searchCity, HttpSession session,
+	public ModelAndView index(@RequestParam(name = "Search", required = false) String searchTerm,
+			@RequestParam(name = "City", required = false) String searchCity,
+			@RequestParam(name = "State", required = false) String searchState,
+			@RequestParam(name = "Country", required = false) String searchCountry, HttpSession session,
 			RedirectAttributes redir) throws IOException {
 		// Creates MAV object to hold the JSP page.
 		ModelAndView mv = new ModelAndView("index");
 		// Variable to hold the Ticket Master API response.
-		TicketMasterAPIResponse pr;
-
+		List<UrEvent> ticketMasterResponse;
+		List<UrEvent> meetUpResponse;
+		List<UrEvent> allEvents = new ArrayList<UrEvent>();
+		mv.addObject("CountryList", cd.findAll());
 		// Logic to determine display of index page.
 		if (searchTerm == null || searchCity == null) {
 			// No form submission. Only seen upon initial pageload.
-			return new ModelAndView("index");
+			return mv;
 		} else if (searchTerm.isEmpty() && searchCity.isEmpty()) {
 			// Form submitted empty.
-			return new ModelAndView("index", "EventMessage", "Please enter either an event or city to search.");
+			mv.addObject("EventMessage", "Please enter either an event or city to search.");
+			return mv;
 		} else if (searchTerm.isEmpty()) {
 			// City only is searched.
-			pr = tmAPI.citySearchEvents(searchCity);
-			if (pr.get_embedded() == null) {
+			ticketMasterResponse = tmAPI.citySearchEvents(searchCity);
+			if (ticketMasterResponse.isEmpty()) {
 				return new ModelAndView("index", "CityMessage", "Please enter a valid city name.");
 			}
 		} else if (searchCity.isEmpty()) {
 			// Keyword only is searched.
-			pr = tmAPI.searchEvents(searchTerm);
-			if (pr.get_embedded() == null) {
+			ticketMasterResponse = tmAPI.searchEvents(searchTerm);
+			meetUpResponse = meet.searchEvents(searchTerm);
+			allEvents.addAll(ticketMasterResponse);
+			allEvents.addAll(meetUpResponse);			
+			if (allEvents.isEmpty()) {
 				return new ModelAndView("index", "EventMessage", "Sorry, we can't find that event!");
 			}
 		} else {
 			// keyword and city are searched.
-			pr = tmAPI.searchEvents(searchTerm, searchCity);
-			if (pr.get_embedded() == null) {
+			ticketMasterResponse = tmAPI.searchEvents(searchTerm, searchCity);
+			if (ticketMasterResponse.isEmpty()) {
 				return new ModelAndView("index", "EventMessage", "Sorry, we can't find that event!");
 			}
 		}
 
 		// Generates list of events for display on search page, ignoring those without
 		// start times.
-		List<Event> events = math.filterTimeless(pr.get_embedded().getEvents());
-
+		List<UrEvent> events = math.filterTimeless(allEvents);
 		// Places the events list on the ModelAndView page.
 		mv.addObject("Events", events);
 		return mv;
@@ -142,7 +154,7 @@ public class RideController {
 			mv.addObject("allParking", allParking);
 			mv.addObject("none", none);
 			return mv;
-			}
+		}
 		Park cheapestPark = allParking.get(0);
 
 		// Calls the method to order the list.
@@ -194,7 +206,7 @@ public class RideController {
 	// Controller to direct back to main results page at park.jsp.
 	@RequestMapping("/add/parkingspot")
 	public ModelAndView addPark(Park parkingSpot, HttpSession session, RedirectAttributes redir) {
-		//Ensures user-generated 
+		// Ensures user-generated
 		parkingSpot.setLatLong(geo.getLatLong(parkingSpot));
 		// Adds parking spot object to the database.
 		pd.create(parkingSpot);
