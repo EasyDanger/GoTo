@@ -10,18 +10,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Transactional
-public class CountriesDao {
+public class SearchLocationsDAO {
 
-	
-	
 	@PersistenceContext
 	private EntityManager em;
 
-	public List<Country> findAll() {
+	public List<Country> findAllCountries() {
 		return em.createQuery("FROM Country", Country.class).getResultList();
+
 	}
-	
-	
 
-
+	public List<State> findAllStates() {
+		return em.createQuery("FROM State", State.class).getResultList();
+	}
 }

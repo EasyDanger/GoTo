@@ -5,8 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "country")
-public class Country {
+@Table(name = "state")
+public class State {
 	@Id
 	private String code;
 	private String name;

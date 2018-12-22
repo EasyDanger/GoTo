@@ -33,10 +33,30 @@ public class MeetUpAPIService {
 	}
 
 	// Method to search for events by keyword.
-	public List<UrEvent> searchEventsByCity(String keyword, String city, String country) {
+	public List<UrEvent> searchEventsByAll(String keyword, String city, String country) {
 		String url = "https://api.meetup.com/2/open_events.json?text=" + keyword
 				+ "&sign=true&photo-host=public&country=" + country + "&city=" + city
 				+ "&limited_events=true&radius=smart&page=100&key=" + apiKey;
+		MeetUpAPIResponse response = restTemplate.getForObject(url, MeetUpAPIResponse.class);
+		List<UrEvent> events = convertEvents(response);
+		return events;
+	}
+	
+	public List<UrEvent> searchEventsByAll(String keyword, String city, String state, String country) {
+		String url = "https://api.meetup.com/2/open_events.json?text=" + keyword
+				+ "sign=true&photo-host=public&country=" + country + "&city=" + city + "&state=" + state
+				+ "&limited_events=true&radius=smart&page=100&key=" + apiKey;
+		System.out.println("citySearchEvents: " + url);
+		MeetUpAPIResponse response = restTemplate.getForObject(url, MeetUpAPIResponse.class);
+		List<UrEvent> events = convertEvents(response);
+		return events;
+	}
+	
+	// Method to search for events by keyword.
+	public List<UrEvent> searchEventsByCity(String city, String country) {
+		String url = "https://api.meetup.com/2/open_events.json?sign=true&photo-host=public&country=" + country + "&city=" + city
+				+ "&limited_events=true&radius=smart&page=100&key=" + apiKey;
+		System.out.println("SearchEventsByCity: " + url);
 		MeetUpAPIResponse response = restTemplate.getForObject(url, MeetUpAPIResponse.class);
 		List<UrEvent> events = convertEvents(response);
 		return events;
@@ -45,9 +65,8 @@ public class MeetUpAPIService {
 //	https://api.meetup.com/2/open_events?
 
 	// Method to search events by in the US, which requires a state input.
-	public List<UrEvent> searchUSEventsByCity(String keyword, String city, String state, String country) {
-		String url = "https://api.meetup.com/2/open_events.json?text=" + keyword
-				+ "&sign=true&photo-host=public&country=" + country + "&city=" + city + "&state=" + state
+	public List<UrEvent> searchEventsByCity(String city, String state, String country) {
+		String url = "https://api.meetup.com/2/open_events.json?sign=true&photo-host=public&country=" + country + "&city=" + city + "&state=" + state
 				+ "&limited_events=true&radius=smart&page=100&key=" + apiKey;
 		System.out.println("citySearchEvents: " + url);
 		MeetUpAPIResponse response = restTemplate.getForObject(url, MeetUpAPIResponse.class);

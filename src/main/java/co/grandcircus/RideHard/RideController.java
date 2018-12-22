@@ -20,7 +20,7 @@ import co.grandcircus.RideHard.ParkDao.ParkDao;
 import co.grandcircus.RideHard.ParkWhizApi.Park;
 import co.grandcircus.RideHard.TicketMaster.Event;
 import co.grandcircus.RideHard.TicketMaster.TicketMasterAPIService;
-import co.grandcircus.RideHard.utils.CountriesDao;
+import co.grandcircus.RideHard.utils.SearchLocationsDAO;
 import co.grandcircus.RideHard.utils.UrEvent;
 
 @Controller
@@ -40,7 +40,7 @@ public class RideController {
 	@Autowired
 	private MeetUpAPIService meet;
 	@Autowired
-	private CountriesDao cd;
+	private SearchLocationsDAO sld;
 
 	// Controller for index page. Accepts parameters from search fields, maintains
 	// the session.
@@ -56,19 +56,31 @@ public class RideController {
 		List<UrEvent> ticketMasterResponse;
 		List<UrEvent> meetUpResponse;
 		List<UrEvent> allEvents = new ArrayList<UrEvent>();
-		mv.addObject("CountryList", cd.findAll());
+		mv.addObject("StateList", sld.findAllStates());
+		mv.addObject("CountryList", sld.findAllCountries());
 		// Logic to determine display of index page.
 		if (searchTerm == null || searchCity == null) {
 			// No form submission. Only seen upon initial pageload.
 			return mv;
 		} else if (searchTerm.isEmpty() && searchCity.isEmpty()) {
 			// Form submitted empty.
-			mv.addObject("EventMessage", "Please enter either an event or city to search.");
+			mv.addObject("EventMessage", "Please enter either an event or location, including a city, to search.");
 			return mv;
-		} else if (searchTerm.isEmpty()) {
+		} else if (!searchCity.isEmpty() && searchCountry.isEmpty()) {
+			mv.addObject("EventMessage", "Please choose a country.");
+			return mv;
+		} else if (searchCountry.equals("us") && searchState.isEmpty()) {
+			mv.addObject("EventMessage", "Please enter a state for cities in the United States.");
+			return mv;
+		}
+
+		else if (searchTerm.isEmpty()) {
 			// City only is searched.
-			ticketMasterResponse = tmAPI.citySearchEvents(searchCity);
-			if (ticketMasterResponse.isEmpty()) {
+			ticketMasterResponse = tmAPI.citySearchEvents(searchCity, searchCountry);
+			meetUpResponse = meet.searchEventsByCity(searchCity, searchCountry);
+			allEvents.addAll(ticketMasterResponse);
+			allEvents.addAll(meetUpResponse);
+			if (allEvents.isEmpty()) {
 				return new ModelAndView("index", "CityMessage", "Please enter a valid city name.");
 			}
 		} else if (searchCity.isEmpty()) {
@@ -76,7 +88,7 @@ public class RideController {
 			ticketMasterResponse = tmAPI.searchEvents(searchTerm);
 			meetUpResponse = meet.searchEvents(searchTerm);
 			allEvents.addAll(ticketMasterResponse);
-			allEvents.addAll(meetUpResponse);			
+			allEvents.addAll(meetUpResponse);
 			if (allEvents.isEmpty()) {
 				return new ModelAndView("index", "EventMessage", "Sorry, we can't find that event!");
 			}
@@ -100,7 +112,7 @@ public class RideController {
 	@RequestMapping("/howFar/{eventId}")
 	public ModelAndView distance(@PathVariable("eventId") String eventId, HttpSession session,
 			RedirectAttributes redir) {
-		ModelAndView mv3 = new ModelAndView("howFar");
+		ModelAdView mv3 = new ModelAndView("howFar");
 		// Creates an Event object to store the event details.
 		Event event = tmAPI.eventDetails(eventId);
 

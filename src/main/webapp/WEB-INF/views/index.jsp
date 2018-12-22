@@ -59,27 +59,18 @@
 		action="/"
 		method="post"
 	>
-		<p
-			align="center"
-			style="padding: 5%"
-		>
+
+		<p align="center">
 			<font size="3">I want to see</font>
 			<input
 				name="Search"
 				id="input"
 				style="text-align: center"
 			/>
-			<font size="3"> in this city*</font>
-			<input
-				name="City"
-				class="input"
-				style="text-align: center"
-				placeholder="(Optional)"
-			/>
-			
-			
+		</p>
+		<p align="center">
 			<select name="Country">
-				<option value="all">Choose a Country</option>
+				<option value=>Choose a Country</option>
 				<c:forEach
 					var="item"
 					items="${ CountryList }"
@@ -87,6 +78,28 @@
 					<option value="${ item.code }">${ item.name }</option>
 				</c:forEach>
 			</select>
+		</p>
+		<p align="center">
+			<font size="3"> in this city</font>
+			<input
+				name="City"
+				class="input"
+				style="text-align: center"
+				placeholder="(Optional)"
+			/>
+		</p>
+		<p align="center">
+			<select name="State">
+				<option value=>Choose a State</option>
+				<c:forEach
+					var="item"
+					items="${ StateList }"
+				>
+					<option value="${ item.code }">${ item.name }</option>
+				</c:forEach>
+			</select>
+		</p>
+		<p align="center">
 			<button class="btn btn-warning">Submit</button>
 		</p>
 	</form>

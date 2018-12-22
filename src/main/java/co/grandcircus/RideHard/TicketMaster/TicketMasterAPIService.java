@@ -50,6 +50,16 @@ public class TicketMasterAPIService {
 		return events;
 	}
 
+	// Method to search city and country, allowing country + city as default search
+	public List<UrEvent> citySearchEvents(String city, String country) {
+		String url = "https://app.ticketmaster.com/discovery/v2/events.json?size=15&apikey=" + apiKey + "&countryCode="
+				+ country + "&city=" + city + "";
+		System.out.println("citySearchEvents: " + url);
+		TicketMasterAPIResponse response = restTemplate.getForObject(url, TicketMasterAPIResponse.class);
+		List<UrEvent> events = convertEvents(response);
+		return events;
+	}
+
 	// Method to search events for both city and keyword. Overloads keyword search.
 	public List<UrEvent> searchEvents(String keyword, String city) {
 		String url = "https://app.ticketmaster.com/discovery/v2/events.json?size=15&apikey=" + apiKey + "&keyword="
@@ -58,9 +68,8 @@ public class TicketMasterAPIService {
 		TicketMasterAPIResponse response = restTemplate.getForObject(url, TicketMasterAPIResponse.class);
 		List<UrEvent> events = convertEvents(response);
 		return events;
-
 	}
-
+	
 	public List<UrEvent> convertEvents(TicketMasterAPIResponse response) {
 		List<UrEvent> events = new ArrayList<UrEvent>();
 		if (response.get_embedded() != null) {
