@@ -1,5 +1,5 @@
 # GoTo
-GoTo is the final project started by myself, Twani Dhar, Marque Burgess, and Bryan Hallman of our Grand Circus Bootcamp. The application provides parking location information based off of the location of events chosen by the user, suggesting the best option based on the user's preferences. It consumes the TicketMaster, ParkWhiz, and Here Maps APIs. 
+GoTo is the final project started by myself, Twani Dhar, Marque Burgess, and Bryan Hallman of our Grand Circus Bootcamp. The application provides parking location information based off of the location of events chosen by the user, suggesting the best option based on the user's preferences. It consumes the TicketMaster, ParkWhiz, and Here Maps APIs. I am extending the functionality by formatting/computing additional information and consuming additional APIs.
 
 ### Features
 - Provides parking data to users based off of events the user plans to attend. <br>
