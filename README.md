@@ -1,5 +1,5 @@
 # GoTo
-GoTo is the final project started by myself, Twani Dhar, Marque Burgess, and Bryan Hallman of our Grand Circus Bootcamp. The application provides parking location information based off of the location of events chosen by the user, suggesting the best option based on the user's preferences. It consumes the TicketMaster, ParkWhiz, and Here Maps APIs. I am extending the functionality by formatting/computing additional information and consuming additional APIs.
+GoTo is the final project started by myself, <a href="https://github.com/Marqueb82">Marque Burgess</a>, <a href="https://github.com/twanidhar">Twani Dhar</a>, and <a href="https://github.com/bryan3071">Bryan Hallman</a> of our Grand Circus Bootcamp. The application provides parking location information based off of the location of events chosen by the user, suggesting the best option based on the user's preferences. It consumes the TicketMaster, ParkWhiz, and Here Maps APIs. I am extending the functionality by formatting/computing additional information and consuming additional APIs.
 
 ### Features
 - Provides parking data to users based off of events the user plans to attend. <br>
@@ -11,6 +11,15 @@ GoTo is the final project started by myself, Twani Dhar, Marque Burgess, and Bry
 - Breakdown price options by planned number of passengers <br>
 - Consume events from other services <br>
 - Consume parking data from other services to cover more locations
+
+##### [1.2.0] - 12/23/2018
+- Added MeetUp search.<br>
+  - Allows searches of Park locations and additions (site functions again.
+- Code cleanup (unused API access methods)
+##### Known Issues
+- NullPointer Exception involved in results page display. Unable to consistently reproduce. <br>
+- Events list displays Ticket Master info and then MeetUp info.
+  - Must sort events by date.
 
 ##### [1.1.2] - 12/20/2018
 - Added MeetUp search.<br>

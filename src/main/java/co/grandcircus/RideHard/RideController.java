@@ -159,9 +159,12 @@ public class RideController {
 		math.orderList(allParking, session);
 
 		// Pull the price info from the event.
-		Double ticketPrice = tmAPI.reasonablePrice(event.getPriceRanges()[0]);
-		String range = "$" + event.getPriceRanges()[0].getMin() + " - $" + event.getPriceRanges()[0].getMax();
-
+		Double ticketPrice;
+		ticketPrice = event.getPrice();
+		String range = "" + ticketPrice;
+		if (event.getHasPriceRange()) {
+			range = "$" + event.getPriceRanges()[0].getMin() + " - $" + event.getPriceRanges()[0].getMax();
+		}
 		session.setAttribute("TicketPrice", ticketPrice);
 		session.setAttribute("TicketRange", range);
 

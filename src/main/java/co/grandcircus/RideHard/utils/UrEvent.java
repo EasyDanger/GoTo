@@ -1,8 +1,11 @@
 package co.grandcircus.RideHard.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.ticketmaster.discovery.model.Event.PriceRange;
 
 import co.grandcircus.RideHard.ParkWhizApi.Park;
+import co.grandcircus.RideHard.TicketMaster.TicketMasterAPIService;
 
 public class UrEvent {
 
@@ -17,6 +20,8 @@ public class UrEvent {
 	private String id;
 	private Boolean hasPriceRange = false;
 	private PriceRange[] priceRanges;
+	@Autowired
+	private TicketMasterAPIService tmAPI;
 
 	public UrEvent(String name, String venue, String city, String date, String time, Double latitude, Double longitude,
 			Double price, String id) {
@@ -77,6 +82,9 @@ public class UrEvent {
 	}
 
 	public Double getPrice() {
+		if (this.getHasPriceRange() ) {
+			price = tmAPI.reasonablePrice(this.getPriceRanges()[0]);
+			}
 		return price;
 	}
 
@@ -89,6 +97,9 @@ public class UrEvent {
 	}
 
 	public PriceRange[] getPriceRanges() {
+		if (!this.getHasPriceRange()) {
+		
+		}
 		return priceRanges;
 	}
 
