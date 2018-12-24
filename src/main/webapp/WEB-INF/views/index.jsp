@@ -56,6 +56,7 @@
 		>${ CityMessage } ${EventMessage }</font>
 	</p>
 	<form
+		name="search"
 		action="/"
 		method="post"
 	>
@@ -133,6 +134,7 @@
 					<c:forEach
 						var="item"
 						items="${Events}"
+						varStatus="loop"
 					>
 						<tr bgcolor="#FFFAF8">
 							<td>${ item.name}</td>
@@ -141,7 +143,7 @@
 							<td>${ item.date }</td>
 							<td>${ item.time }</td>
 							<td>
-								<a href="/howFar/${ item.id }">
+								<a href="/howFar/${loop.index }">
 									<button class="btn btn-warning">Select Event</button>
 								</a>
 							</td>

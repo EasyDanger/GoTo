@@ -18,7 +18,6 @@ import co.grandcircus.RideHard.HereCodeAPI.HereCodeAPIService;
 import co.grandcircus.RideHard.MeetUp.MeetUpAPIService;
 import co.grandcircus.RideHard.ParkDao.ParkDao;
 import co.grandcircus.RideHard.ParkWhizApi.Park;
-import co.grandcircus.RideHard.TicketMaster.Event;
 import co.grandcircus.RideHard.TicketMaster.TicketMasterAPIService;
 import co.grandcircus.RideHard.utils.SearchLocationsDAO;
 import co.grandcircus.RideHard.utils.UrEvent;
@@ -52,6 +51,7 @@ public class RideController {
 			RedirectAttributes redir) throws IOException {
 		// Creates MAV object to hold the JSP page.
 		ModelAndView mv = new ModelAndView("index");
+
 		// Variable to hold the Ticket Master API response.
 		List<UrEvent> ticketMasterResponse;
 		List<UrEvent> meetUpResponse;
@@ -62,61 +62,47 @@ public class RideController {
 		if (searchTerm == null || searchCity == null) {
 			// No form submission. Only seen upon initial pageload.
 			return mv;
-		} else if (searchTerm.isEmpty() && searchCity.isEmpty()) {
+		}
+		if (searchTerm.isEmpty() && searchCity.isEmpty()) {
 			// Form submitted empty.
 			mv.addObject("EventMessage", "Please enter either an event or location, including a city, to search.");
 			return mv;
-		} else if (!searchCity.isEmpty() && searchCountry.isEmpty()) {
+		}
+		if (!searchCity.isEmpty() && searchCountry.isEmpty()) {
 			mv.addObject("EventMessage", "Please choose a country.");
 			return mv;
-		} else if (searchCountry.equals("us") && searchState.isEmpty()) {
-			mv.addObject("EventMessage", "Please enter a state for cities in the United States.");
+		}
+		if (searchCountry.equals("US") && searchState.isEmpty()) {
+			mv.addObject("EventMessage", "Please choose a state for cities in the United States.");
 			return mv;
 		}
 
-		else if (searchTerm.isEmpty()) {
-			// City only is searched.
-			ticketMasterResponse = tmAPI.citySearchEvents(searchCity, searchCountry);
-			meetUpResponse = meet.searchEventsByCity(searchCity, searchCountry);
-			allEvents.addAll(ticketMasterResponse);
-			allEvents.addAll(meetUpResponse);
-			if (allEvents.isEmpty()) {
-				return new ModelAndView("index", "CityMessage", "Please enter a valid city name.");
-			}
-		} else if (searchCity.isEmpty()) {
-			// Keyword only is searched.
-			ticketMasterResponse = tmAPI.searchEvents(searchTerm);
-			meetUpResponse = meet.searchEvents(searchTerm);
-			allEvents.addAll(ticketMasterResponse);
-			allEvents.addAll(meetUpResponse);
-			if (allEvents.isEmpty()) {
-				return new ModelAndView("index", "EventMessage", "Sorry, we can't find that event!");
-			}
-		} else {
-			// keyword and city are searched.
-			ticketMasterResponse = tmAPI.searchEvents(searchTerm, searchCity);
-			if (ticketMasterResponse.isEmpty()) {
-				return new ModelAndView("index", "EventMessage", "Sorry, we can't find that event!");
-			}
+		ticketMasterResponse = tmAPI.searchEvents(searchTerm, searchCity, searchState, searchCountry);
+		meetUpResponse = meet.searchEvents(searchTerm, searchCity, searchState, searchCountry);
+		allEvents.addAll(ticketMasterResponse);
+		allEvents.addAll(meetUpResponse);
+
+		if (allEvents.isEmpty()) {
+			mv.addObject("EventMessage", "Sorry, there are no items that match that search. Please try another.");
+			return mv;
 		}
 
 		// Generates list of events for display on search page, ignoring those without
 		// start times.
 		List<UrEvent> events = math.filterTimeless(allEvents);
 		// Places the events list on the ModelAndView page.
-		mv.addObject("Events", events);
+		session.setAttribute("Events", events);
 		return mv;
 	}
 
 	// Controller for page for user to add their preferences.
-	@RequestMapping("/howFar/{eventId}")
-	public ModelAndView distance(@PathVariable("eventId") String eventId, HttpSession session,
+	@RequestMapping("/howFar/{EventIndex}")
+	public ModelAndView distance(@PathVariable("EventIndex") Integer eventIndex, HttpSession session,
 			RedirectAttributes redir) {
-		ModelAdView mv3 = new ModelAndView("howFar");
+		ModelAndView mv3 = new ModelAndView("howFar");
+		List<UrEvent> events = (List<UrEvent>) session.getAttribute("Events");
 		// Creates an Event object to store the event details.
-		Event event = tmAPI.eventDetails(eventId);
-
-		// mv3.addObject("event", event);
+		UrEvent event = events.get(eventIndex);
 		session.setAttribute("Event", event);
 		return mv3;
 	}
@@ -142,7 +128,7 @@ public class RideController {
 
 		ModelAndView mv = new ModelAndView("park");
 		// Pulling event from the session for it's details.
-		Event event = (Event) session.getAttribute("Event");
+		UrEvent event = (UrEvent) session.getAttribute("Event");
 
 		// Lists to hold our Park objects, one from the DB and one from the API
 		List<Park> dbParking = math.findParkingFromDatabase(session);
@@ -173,7 +159,7 @@ public class RideController {
 		math.orderList(allParking, session);
 
 		// Pull the price info from the event.
-		Double ticketPrice = math.reasonablePrice(event.getPriceRanges()[0]);
+		Double ticketPrice = tmAPI.reasonablePrice(event.getPriceRanges()[0]);
 		String range = "$" + event.getPriceRanges()[0].getMin() + " - $" + event.getPriceRanges()[0].getMax();
 
 		session.setAttribute("TicketPrice", ticketPrice);
