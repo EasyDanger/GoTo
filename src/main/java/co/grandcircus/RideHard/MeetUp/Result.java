@@ -1,7 +1,5 @@
 package co.grandcircus.RideHard.MeetUp;
 
-import co.grandcircus.RideHard.utils.ApiSource;
-
 public class Result {
 	
 	private Venue venue;
@@ -10,8 +8,6 @@ public class Result {
 	private Group group;
 	private String name;
 	private Fee fee;
-	private Enum<ApiSource> source = ApiSource.MEETUP;
-
 	
 	public String getName() {
 		return name;
@@ -42,9 +38,6 @@ public class Result {
 	}
 	public void setGroup(Group group) {
 		this.group = group;
-	}
-	public Enum<ApiSource> getSource() {
-		return source;
 	}
 	public Fee getFee() {
 		return fee;

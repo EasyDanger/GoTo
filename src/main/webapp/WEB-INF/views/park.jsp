@@ -81,8 +81,8 @@
 			<c:when test="${ empty none.name }">
 				<mainp>
 				<div class="card3">
-					<h2>The closest spot is at ${ClosePark.name }.</h2>
-					<h2>The least expensive spot is at ${CheapPark.name }.</h2>
+					<h2>The closest spot is at ${ClosePark.name }</h2>
+					<h2>The least expensive spot is at ${CheapPark.name }</h2>
 					<h1>The best value overall is at ${ValuePark.name }!</h1>
 				</div>
 				</mainp>

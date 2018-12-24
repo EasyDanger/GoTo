@@ -2,6 +2,8 @@ package co.grandcircus.RideHard.utils;
 
 import com.ticketmaster.discovery.model.Event.PriceRange;
 
+import co.grandcircus.RideHard.ParkWhizApi.Park;
+
 public class UrEvent {
 
 	private String name;
@@ -88,5 +90,19 @@ public class UrEvent {
 
 	public PriceRange[] getPriceRanges() {
 		return priceRanges;
+	}
+
+	public double distanceFrom(Park park) {
+		final double EARTH_RADIUS_FEET = 20902230.9711;
+
+		double lat1 = Math.toRadians(latitude);
+		double long1 = Math.toRadians(longitude);
+		double lat2 = Math.toRadians(park.getLatitude());
+		double long2 = Math.toRadians(park.getLongitude());
+		// apply the spherical law of cosines with a triangle composed of the
+		// two locations and the north pole
+		double theCos = Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(long1 - long2);
+		double arcLength = Math.acos(theCos);
+		return arcLength * EARTH_RADIUS_FEET;
 	}
 }

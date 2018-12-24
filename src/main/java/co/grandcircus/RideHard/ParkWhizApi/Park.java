@@ -54,6 +54,7 @@ public class Park {
 	private String name; 
 	private String address; 
 	private String city; 
+	@Transient
 	private Double purchasingprice;
 	@Transient
 	private Double distanceInFeet;

@@ -13,14 +13,12 @@ import co.grandcircus.RideHard.HereCodeAPI.HereCodeAPIService;
 import co.grandcircus.RideHard.ParkDao.ParkDao;
 import co.grandcircus.RideHard.ParkWhizApi.Park;
 import co.grandcircus.RideHard.ParkWhizApi.ParkWhizAPIService;
-import co.grandcircus.RideHard.TicketMaster.Event;
 import co.grandcircus.RideHard.utils.ParkingByDistanceComparator;
 import co.grandcircus.RideHard.utils.UrEvent;
 
 //Class to contain the math and science portions of the data. These methods process the data, so the controller class can hold only controllers.
 @Component
 public class ForMath {
-
 
 	// Class fields.
 	// Database for user entered Park objects.
@@ -31,7 +29,7 @@ public class ForMath {
 	private ParkWhizAPIService pwas;
 	@Autowired
 	private HereCodeAPIService geo;
-	
+
 	// Calculates the gas cost base on driving distance and IRS mileage factor for
 	// 2018.
 	Double gasCalc(Double drivingDistance) {
@@ -44,12 +42,11 @@ public class ForMath {
 	List<Park> findParkingFromApi(HttpSession session) {
 		// Pulls useful variables from the session.
 		double howFar = (double) session.getAttribute("howFar");
-		Event event = (Event) session.getAttribute("Event");
+		UrEvent event = (UrEvent) session.getAttribute("Event");
 
 		// Stores the response from the Parkwhiz API.
-		Park[] response = pwas.getPark(event.get_embedded().getVenues().get(0).getLocation().getLatitude(),
-				event.get_embedded().getVenues().get(0).getLocation().getLongitude(),
-				event.getDates().getStart().getLocalDate(), event.getDates().getStart().getLocalTime(), howFar);
+		Park[] response = pwas.getPark(event.getLatitude(), event.getLongitude(), event.getDate(), event.getTime(),
+				howFar);
 
 		// List to store to store the park objects from the API
 		ArrayList<Park> currentParks = new ArrayList<>();
@@ -70,7 +67,7 @@ public class ForMath {
 		double howFarMiles = (double) session.getAttribute("howFar");
 		// Converts to feet.
 		double howFarFeet = howFarMiles * 5280;
-		Event event = (Event) session.getAttribute("Event");
+		UrEvent event = (UrEvent) session.getAttribute("Event");
 
 		// An empty list to store the Park objects from the database that fall within
 		// the given radius.
@@ -79,8 +76,7 @@ public class ForMath {
 		List<Park> fullList = pd.findall();
 		// Fill the new list based on the datbase park objects' distance from the event.
 		for (Park park : fullList) {
-			if ((event.get_embedded().getVenues().get(0).getLocation().distanceFrom(park) <= howFarFeet)
-					&& (park.getPrice() != null)) {
+			if ((event.distanceFrom(park) <= howFarFeet) && (park.getPrice() != null)) {
 				psList.add(park);
 			}
 		}
@@ -91,14 +87,14 @@ public class ForMath {
 
 	// Method to order the park object lists.
 	List<Park> orderList(List<Park> parks, HttpSession session) {
-		Event event = (Event) session.getAttribute("Event");
+		UrEvent event = (UrEvent) session.getAttribute("Event");
 		// Converts distance from event to feet.
 		for (Park park : parks) {
 			// It verifies that each park object has a lat and long.
 			if ((park.getLatitude() == null) || (park.getLongitude() == null)) {
 				park.setLatLong(geo.getLatLong(park));
 			}
-			park.setDistanceInFeet(event.get_embedded().getVenues().get(0).getLocation().distanceFrom(park));
+			park.setDistanceInFeet(event.distanceFrom(park));
 		}
 		// Sorts the list based on distance from event location.
 		Collections.sort(parks, new ParkingByDistanceComparator());
@@ -137,6 +133,4 @@ public class ForMath {
 		}
 		return temp;
 	}
-	
-	
 }
